@@ -1,0 +1,32 @@
+dataset,archive,class_name,file_count,archive_total_files,size_mb
+Original images,dataset2.zip,Apple___Black_rot,200,2400,35.52
+Original images,dataset2.zip,Apple___healthy,200,2400,35.52
+Original images,dataset2.zip,Corn___Northern_Leaf_Blight,200,2400,35.52
+Original images,dataset2.zip,Corn___healthy,200,2400,35.52
+Original images,dataset2.zip,Grape___Black_rot,200,2400,35.52
+Original images,dataset2.zip,Grape___Leaf_blight_(Isariopsis_Leaf_Spot),200,2400,35.52
+Original images,dataset2.zip,Grape___healthy,200,2400,35.52
+Original images,dataset2.zip,Peach___Bacterial_spot,200,2400,35.52
+Original images,dataset2.zip,Peach___healthy,200,2400,35.52
+Original images,dataset2.zip,Tomato___Bacterial_spot,200,2400,35.52
+Original images,dataset2.zip,Tomato___Late_blight,200,2400,35.52
+Original images,dataset2.zip,Tomato___healthy,200,2400,35.52
+Leaf-segmented images,seg_dataset2.zip,Apple___Black_rot,200,2400,213.15
+Leaf-segmented images,seg_dataset2.zip,Apple___healthy,200,2400,213.15
+Leaf-segmented images,seg_dataset2.zip,Corn___Northern_Leaf_Blight,200,2400,213.15
+Leaf-segmented images,seg_dataset2.zip,Corn___healthy,200,2400,213.15
+Leaf-segmented images,seg_dataset2.zip,Grape___Black_rot,200,2400,213.15
+Leaf-segmented images,seg_dataset2.zip,Grape___Leaf_blight_(Isariopsis_Leaf_Spot),200,2400,213.15
+Leaf-segmented images,seg_dataset2.zip,Grape___healthy,200,2400,213.15
+Leaf-segmented images,seg_dataset2.zip,Peach___Bacterial_spot,200,2400,213.15
+Leaf-segmented images,seg_dataset2.zip,Peach___healthy,200,2400,213.15
+Leaf-segmented images,seg_dataset2.zip,Tomato___Bacterial_spot,200,2400,213.15
+Leaf-segmented images,seg_dataset2.zip,Tomato___Late_blight,200,2400,213.15
+Leaf-segmented images,seg_dataset2.zip,Tomato___healthy,200,2400,213.15
+Ground-truth lesion masks,ground truth.zip,Apple___Black_rot,50,350,0.60
+Ground-truth lesion masks,ground truth.zip,Corn___Northern_Leaf_Blight,50,350,0.60
+Ground-truth lesion masks,ground truth.zip,Grape___Black_rot,50,350,0.60
+Ground-truth lesion masks,ground truth.zip,Grape___Leaf_blight_(Isariopsis_Leaf_Spot),50,350,0.60
+Ground-truth lesion masks,ground truth.zip,Peach___Bacterial_spot,50,350,0.60
+Ground-truth lesion masks,ground truth.zip,Tomato___Bacterial_spot,50,350,0.60
+Ground-truth lesion masks,ground truth.zip,Tomato___Late_blight,50,350,0.60

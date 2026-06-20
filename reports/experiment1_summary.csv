@@ -1,0 +1,7 @@
+model,dataset,best_val_acc,notes
+mobilenet,original,0.952,No-seg best observed validation accuracy from notebook output
+efficientnet,original,0.958,No-seg best observed validation accuracy from notebook output
+mcffa,original,0.956,No-seg best observed validation accuracy from notebook output
+mobilenet,leaf_segmented,0.935,Leaf-seg best observed validation accuracy from notebook output
+efficientnet,leaf_segmented,0.947,Leaf-seg best observed validation accuracy from notebook output
+mcffa,leaf_segmented,0.956,Leaf-seg best observed validation accuracy from notebook output

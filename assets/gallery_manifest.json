@@ -1,0 +1,74 @@
+[
+  {
+    "path": "assets/figures/notebook_cell_07_output_02.png",
+    "title": "Apple Black Rot",
+    "category": "Leaf-segmented sample",
+    "caption": "Apple Black Rot: segmented/leaf-only sample from the original Colab output."
+  },
+  {
+    "path": "assets/figures/notebook_cell_07_output_03.png",
+    "title": "Apple Healthy",
+    "category": "Leaf-segmented sample",
+    "caption": "Apple Healthy: segmented/leaf-only sample from the original Colab output."
+  },
+  {
+    "path": "assets/figures/notebook_cell_07_output_04.png",
+    "title": "Corn Northern Leaf Blight",
+    "category": "Leaf-segmented sample",
+    "caption": "Corn Northern Leaf Blight: segmented/leaf-only sample from the original Colab output."
+  },
+  {
+    "path": "assets/figures/notebook_cell_07_output_05.png",
+    "title": "Corn Healthy",
+    "category": "Leaf-segmented sample",
+    "caption": "Corn Healthy: segmented/leaf-only sample from the original Colab output."
+  },
+  {
+    "path": "assets/figures/notebook_cell_07_output_06.png",
+    "title": "Grape Black Rot",
+    "category": "Leaf-segmented sample",
+    "caption": "Grape Black Rot: segmented/leaf-only sample from the original Colab output."
+  },
+  {
+    "path": "assets/figures/notebook_cell_07_output_07.png",
+    "title": "Grape Leaf Blight",
+    "category": "Leaf-segmented sample",
+    "caption": "Grape Leaf Blight: segmented/leaf-only sample from the original Colab output."
+  },
+  {
+    "path": "assets/figures/notebook_cell_07_output_08.png",
+    "title": "Grape Healthy",
+    "category": "Leaf-segmented sample",
+    "caption": "Grape Healthy: segmented/leaf-only sample from the original Colab output."
+  },
+  {
+    "path": "assets/figures/notebook_cell_07_output_09.png",
+    "title": "Peach Bacterial Spot",
+    "category": "Leaf-segmented sample",
+    "caption": "Peach Bacterial Spot: segmented/leaf-only sample from the original Colab output."
+  },
+  {
+    "path": "assets/figures/notebook_cell_07_output_10.png",
+    "title": "Peach Healthy",
+    "category": "Leaf-segmented sample",
+    "caption": "Peach Healthy: segmented/leaf-only sample from the original Colab output."
+  },
+  {
+    "path": "assets/figures/notebook_cell_07_output_11.png",
+    "title": "Tomato Bacterial Spot",
+    "category": "Leaf-segmented sample",
+    "caption": "Tomato Bacterial Spot: segmented/leaf-only sample from the original Colab output."
+  },
+  {
+    "path": "assets/figures/notebook_cell_07_output_12.png",
+    "title": "Tomato Late Blight",
+    "category": "Leaf-segmented sample",
+    "caption": "Tomato Late Blight: segmented/leaf-only sample from the original Colab output."
+  },
+  {
+    "path": "assets/figures/notebook_cell_07_output_13.png",
+    "title": "Tomato Healthy",
+    "category": "Leaf-segmented sample",
+    "caption": "Tomato Healthy: segmented/leaf-only sample from the original Colab output."
+  }
+]

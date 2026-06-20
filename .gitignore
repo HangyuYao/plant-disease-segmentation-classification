@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Jupyter / Colab
+.ipynb_checkpoints/
+
+# Archives and datasets
+*.zip
+dataset2/
+seg_dataset2/
+ground truth/
+ground_truth/
+dataset2_split/
+exp1_split/
+exp2_cls_data_strict/
+
+# Model weights
+*.pt
+*.pth
+*.ckpt
+*.onnx
+
+# Generated outputs
+results/
+results.zip
+seg_vis/
+baseline_models/
+baseline_models-*/
+exp2_results_strict/
+exp2_results_strict-*/
+exp2_results_strict_50/
+exp2_results_strict_50-*/
+outputs/
+runs/
+
+# Local / OS
+.DS_Store
+Thumbs.db

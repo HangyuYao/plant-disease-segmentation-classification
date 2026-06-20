@@ -1,0 +1,10 @@
+seg_dataset,miou,f1,seg_time_seconds_per_image,classifier,val_acc,cls_time_seconds_per_image
+mobilenet_masked,0.276,0.392,0.0097,mobilenet,0.489,0.0093
+mobilenet_masked,0.276,0.392,0.0097,efficientnet,0.596,0.0062
+mobilenet_masked,0.276,0.392,0.0097,mcffa,0.629,0.0079
+efficientnet_masked,0.343,0.455,0.0147,mobilenet,0.500,0.0058
+efficientnet_masked,0.343,0.455,0.0147,efficientnet,0.579,0.0062
+efficientnet_masked,0.343,0.455,0.0147,mcffa,0.550,0.0076
+mcffa_masked,0.273,0.382,0.0115,mobilenet,0.568,0.0059
+mcffa_masked,0.273,0.382,0.0115,efficientnet,0.621,0.0064
+mcffa_masked,0.273,0.382,0.0115,mcffa,0.582,0.0061
