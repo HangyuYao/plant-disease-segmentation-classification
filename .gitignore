@@ -25,6 +25,7 @@ exp2_cls_data_strict/
 *.pth
 *.ckpt
 *.onnx
+local_weights/
 
 # Generated outputs
 results/

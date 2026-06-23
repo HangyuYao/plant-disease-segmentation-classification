@@ -309,25 +309,133 @@ def gallery_tab(manifest: list[dict[str, Any]], warning: str | None) -> None:
                 st.caption(category)
 
 
-def future_inference_tab() -> None:
-    st.header("Future Inference")
-    st.info("Live inference is intentionally out of scope for version 1.")
+def inference_tab() -> None:
+    st.header("Inference Demo")
     st.write(
-        "The first release is a reproducible portfolio dashboard backed by curated "
-        "summary files and selected visuals. A later inference workflow should be "
-        "added only after the runtime dependencies and model artifacts are packaged "
-        "deliberately."
+        "Upload a plant leaf image to run local disease classification and an "
+        "EfficientNet lesion segmentation overlay. Model weights remain local and "
+        "are excluded from GitHub."
     )
-    st.subheader("Needed for a later inference release")
-    st.markdown(
-        """
-- Exported model weights with documented architecture and preprocessing.
-- A small, versioned sample input set or an upload workflow with validation.
-- Runtime dependency lockfile and model-loading smoke tests.
-- Clear class labels, normalization steps, and segmentation/inference pipeline order.
-- Resource limits and user-facing error handling for unsupported images.
-"""
+
+    from src.inference.config import CLASSIFIER_WEIGHTS, ROOT as INFERENCE_ROOT, SEGMENTATION_WEIGHTS
+    from src.inference.runtime import check_weight_files, missing_inference_dependencies
+
+    missing_dependencies = missing_inference_dependencies()
+    weights = check_weight_files(
+        {
+            "classifier": CLASSIFIER_WEIGHTS,
+            "efficientnet segmenter": SEGMENTATION_WEIGHTS,
+        }
     )
+    missing_weights = [name for name, exists in weights.items() if not exists]
+
+    if missing_dependencies:
+        st.warning(
+            "Inference dependencies are not installed in this environment: "
+            + ", ".join(missing_dependencies)
+        )
+        st.code("pip install torch torchvision timm opencv-python numpy", language="bash")
+        return
+
+    if missing_weights:
+        st.warning(
+            "Inference is disabled because local weight file(s) are missing: "
+            + ", ".join(missing_weights)
+        )
+        st.caption("These files should stay local and must not be committed.")
+        return
+
+    model_options = {
+        "EfficientNet lesion segmenter": SEGMENTATION_WEIGHTS,
+    }
+    extra_weights = {
+        "MCFFA segmenter": INFERENCE_ROOT / "mcffa_best.pt",
+        "MobileNet segmenter": INFERENCE_ROOT / "mobilenet_best.pt",
+    }
+    present_extra = [name for name, path in extra_weights.items() if path.is_file()]
+    if present_extra:
+        st.caption(
+            "Additional local segmentation weights detected but not loaded yet: "
+            + ", ".join(present_extra)
+            + ". They need matching architecture code before being enabled."
+        )
+
+    uploaded = st.file_uploader("Plant image", type=["jpg", "jpeg", "png", "bmp", "webp"])
+    if uploaded is None:
+        return
+
+    from PIL import Image
+
+    from src.inference.classifier import classify_image
+    from src.inference.overlay import make_red_overlay, prepare_display_mask
+    from src.inference.preprocessing import ensure_rgb
+    from src.inference.segmentation import load_segmenter, predict_mask
+
+    threshold = st.slider("Mask threshold", min_value=0.1, max_value=0.9, value=0.5, step=0.05)
+    response_mode_label = st.radio(
+        "Lesion mask mode",
+        ["High response", "Low response"],
+        horizontal=True,
+        help="Use Low response if the raw mask appears inverted.",
+    )
+    suppress_white_background = st.checkbox("Suppress white background", value=True)
+    show_raw_mask = st.checkbox("Show raw model mask", value=False)
+    model_name = st.selectbox("Segmentation model", list(model_options.keys()))
+    device = "cpu"
+
+    image = ensure_rgb(Image.open(uploaded))
+    with st.spinner("Loading local models..."):
+        classifier = get_classifier(device)
+        segmenter = get_segmenter(str(model_options[model_name]), device)
+
+    with st.spinner("Running classification and segmentation..."):
+        predictions = classify_image(classifier, image, device=device, top_k=3)
+        mask = predict_mask(segmenter, image, device=device)
+        response_mode = "low" if response_mode_label == "Low response" else "high"
+        display_mask = prepare_display_mask(mask, response_mode=response_mode)
+        overlay = make_red_overlay(
+            image,
+            mask,
+            threshold=threshold,
+            response_mode=response_mode,
+            suppress_white_background=suppress_white_background,
+        )
+
+    image_cols = st.columns(3)
+    with image_cols[0]:
+        st.subheader("Input")
+        st.image(image, use_container_width=True)
+    with image_cols[1]:
+        st.subheader("Selected Mask")
+        st.image(display_mask, clamp=True, use_container_width=True)
+    with image_cols[2]:
+        st.subheader("Overlay")
+        st.image(overlay, use_container_width=True)
+
+    if show_raw_mask:
+        st.subheader("Raw Model Mask")
+        st.image(mask, clamp=True, use_container_width=True)
+
+    st.subheader("Top Disease Predictions")
+    for prediction in predictions:
+        st.metric(prediction.display, f"{prediction.confidence * 100:.2f}%")
+
+
+@st.cache_resource(show_spinner=False)
+def get_classifier(device: str):
+    from src.inference.classifier import load_classifier
+    from src.inference.config import CLASSIFIER_WEIGHTS
+
+    return load_classifier(CLASSIFIER_WEIGHTS, device=device)
+
+
+@st.cache_resource(show_spinner=False)
+def get_segmenter(weight_path: str, device: str):
+    from pathlib import Path
+
+    from src.inference.segmentation import load_segmenter
+
+    return load_segmenter(Path(weight_path), device=device)
 
 
 def main() -> None:
@@ -345,7 +453,7 @@ def main() -> None:
             "Segmentation",
             "Experiment 2",
             "Visual Gallery",
-            "Future Inference",
+            "Inference Demo",
         ]
     )
 
@@ -364,7 +472,7 @@ def main() -> None:
     with tabs[5]:
         gallery_tab(manifest, manifest_warning)
     with tabs[6]:
-        future_inference_tab()
+        inference_tab()
 
 
 if __name__ == "__main__":

@@ -6,7 +6,7 @@ This project explores plant disease classification under three image-preparation
 - Leaf-segmented images with the background removed.
 - Lesion-only masked images that isolate diseased regions.
 
-Version 1 of this repository is a portfolio-ready results dashboard. It summarizes prepared experiments and curated visuals; it does not perform live model inference and does not require trained model weights or the full datasets at runtime.
+Version 1 of this repository is a portfolio-ready results dashboard. It summarizes prepared experiments and curated visuals. The Streamlit app also includes an optional local inference tab for classification plus lesion mask overlay when the required model weights are present on your machine.
 
 ## Repository Contents
 
@@ -14,6 +14,7 @@ Version 1 of this repository is a portfolio-ready results dashboard. It summariz
 - `reports/` - Small CSV summaries used by the dashboard.
 - `assets/` - Lightweight figure exports and gallery metadata for dashboard display.
 - `data/README.md` - Notes about expected local dataset archives and why large data is excluded.
+- `src/inference/` - Optional local inference helpers for classification and EfficientNet lesion mask overlay.
 - `docs/`, `scripts/`, `src/`, and `tests/` - Reproducibility notes, preparation utilities, reusable helpers, and project checks.
 
 ## Not Committed
@@ -25,7 +26,7 @@ Large research artifacts are intentionally excluded from the GitHub repository:
 - Trained model weights.
 - Large generated outputs from experiments or notebooks.
 
-The dashboard uses curated summaries and lightweight figures so it can run after preparation without the original archives, extracted folders, or model weights.
+The dashboard uses curated summaries and lightweight figures so it can run after preparation without the original archives, extracted folders, or model weights. The optional inference tab only runs when local weights are available and remains separate from the committed portfolio artifacts.
 
 ## Run The Dashboard
 
@@ -41,6 +42,15 @@ Start the Streamlit dashboard:
 streamlit run app/streamlit_app.py
 ```
 
+## Optional Local Inference
+
+The inference tab expects these local, uncommitted weight files:
+
+- `baseline_models-20260620T213513Z-3-001/baseline_models/best_efficientnet_baseline.pth` for EfficientNet-B0 disease classification.
+- `efficientnet_best.pt` for EfficientNet lesion segmentation.
+
+Additional segmentation checkpoints such as `mcffa_best.pt` and `mobilenet_best.pt` can stay in the project folder, but they need matching architecture code before they are enabled in the app. All weight files are ignored by `.gitignore`.
+
 ## Future Work
 
-Future versions can add live inference after the model weights, preprocessing pipeline, label mapping, and model hosting workflow are cleaned up and documented. Those pieces are intentionally outside the v1 runtime path.
+Future versions can package additional segmentation architectures, add GPU/device selection, improve calibration reporting, and provide a hosted demo with explicitly managed model artifacts.
