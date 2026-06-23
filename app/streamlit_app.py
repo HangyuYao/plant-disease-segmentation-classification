@@ -313,21 +313,22 @@ def inference_tab() -> None:
     st.header("Inference Demo")
     st.write(
         "Upload a plant leaf image to run local disease classification and an "
-        "EfficientNet lesion segmentation overlay. Model weights remain local and "
+        "optional lesion segmentation overlay. Model weights remain local and "
         "are excluded from GitHub."
     )
 
-    from src.inference.config import CLASSIFIER_WEIGHTS, ROOT as INFERENCE_ROOT, SEGMENTATION_WEIGHTS
+    from src.inference.config import CLASSIFIER_WEIGHTS
     from src.inference.runtime import check_weight_files, missing_inference_dependencies
+    from src.inference.segmentation import SEGMENTATION_MODELS
 
     missing_dependencies = missing_inference_dependencies()
     weights = check_weight_files(
         {
             "classifier": CLASSIFIER_WEIGHTS,
-            "efficientnet segmenter": SEGMENTATION_WEIGHTS,
+            **{spec.label: spec.weight_path for spec in SEGMENTATION_MODELS.values()},
         }
     )
-    missing_weights = [name for name, exists in weights.items() if not exists]
+    classifier_missing = not weights["classifier"]
 
     if missing_dependencies:
         st.warning(
@@ -337,28 +338,22 @@ def inference_tab() -> None:
         st.code("pip install torch torchvision timm opencv-python numpy", language="bash")
         return
 
-    if missing_weights:
+    if classifier_missing:
         st.warning(
-            "Inference is disabled because local weight file(s) are missing: "
-            + ", ".join(missing_weights)
+            "Inference is disabled because the local classifier weight file is missing."
         )
         st.caption("These files should stay local and must not be committed.")
         return
 
-    model_options = {
-        "EfficientNet lesion segmenter": SEGMENTATION_WEIGHTS,
+    available_segmenters = {
+        spec.label: key
+        for key, spec in SEGMENTATION_MODELS.items()
+        if spec.weight_path.is_file()
     }
-    extra_weights = {
-        "MCFFA segmenter": INFERENCE_ROOT / "mcffa_best.pt",
-        "MobileNet segmenter": INFERENCE_ROOT / "mobilenet_best.pt",
-    }
-    present_extra = [name for name, path in extra_weights.items() if path.is_file()]
-    if present_extra:
-        st.caption(
-            "Additional local segmentation weights detected but not loaded yet: "
-            + ", ".join(present_extra)
-            + ". They need matching architecture code before being enabled."
-        )
+    if not available_segmenters:
+        st.warning("Inference is disabled because no local segmentation weight files were found.")
+        st.caption("Expected one or more local .pt files listed in README.md.")
+        return
 
     uploaded = st.file_uploader("Plant image", type=["jpg", "jpeg", "png", "bmp", "webp"])
     if uploaded is None:
@@ -380,13 +375,14 @@ def inference_tab() -> None:
     )
     suppress_white_background = st.checkbox("Suppress white background", value=True)
     show_raw_mask = st.checkbox("Show raw model mask", value=False)
-    model_name = st.selectbox("Segmentation model", list(model_options.keys()))
+    model_name = st.selectbox("Segmentation model", list(available_segmenters.keys()))
+    model_key = available_segmenters[model_name]
     device = "cpu"
 
     image = ensure_rgb(Image.open(uploaded))
     with st.spinner("Loading local models..."):
         classifier = get_classifier(device)
-        segmenter = get_segmenter(str(model_options[model_name]), device)
+        segmenter = get_segmenter(model_key, device)
 
     with st.spinner("Running classification and segmentation..."):
         predictions = classify_image(classifier, image, device=device, top_k=3)
@@ -430,12 +426,11 @@ def get_classifier(device: str):
 
 
 @st.cache_resource(show_spinner=False)
-def get_segmenter(weight_path: str, device: str):
-    from pathlib import Path
+def get_segmenter(model_key: str, device: str):
+    from src.inference.segmentation import SEGMENTATION_MODELS, load_segmenter
 
-    from src.inference.segmentation import load_segmenter
-
-    return load_segmenter(Path(weight_path), device=device)
+    spec = SEGMENTATION_MODELS[model_key]
+    return load_segmenter(spec.weight_path, device=device, model_key=model_key)
 
 
 def main() -> None:
